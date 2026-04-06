@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before stopping, check: Are you in the middle of a QRSPI pipeline? If so, ensure you have (1) updated progress.md with the latest activity, (2) reported the current status to the human, and (3) clearly stated what needs to happen next and who needs to act (human approval or next agent). If any of these are missing, do them now before stopping.",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "A subagent just finished. Check if this was a QRSPI pipeline agent (clarifier, explorer, architect, critic, security-reviewer, planner, builder, reviewer, pr-creator). If it was, verify that: (1) the agent produced its expected output file in reports/ or tasks.json, (2) progress.md was updated, (3) the human has been notified of the result. If any output is missing, flag it before proceeding.",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

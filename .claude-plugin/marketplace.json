@@ -1,0 +1,18 @@
+{
+  "name": "qrspi-orchestrator",
+  "owner": {
+    "name": "Vlad"
+  },
+  "description": "Multi-agent orchestration system for software development with human-in-the-loop checkpoints",
+  "plugins": [
+    {
+      "name": "qrspi-orchestrator",
+      "source": "./",
+      "description": "Multi-agent QRSPI pipeline plugin",
+      "version": "0.4.0",
+      "author": {
+        "name": "Vlad"
+      }
+    }
+  ]
+}

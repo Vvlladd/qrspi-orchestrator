@@ -1,0 +1,9 @@
+{
+  "name": "qrspi-orchestrator",
+  "version": "0.4.0",
+  "description": "Multi-agent orchestration system for software development with human-in-the-loop checkpoints. Implements the QRSPI pipeline: Questions, Research, Structure/Design, Plan, Implement + Review, Pull Request.",
+  "author": {
+    "name": "Vlad"
+  },
+  "keywords": ["orchestration", "multi-agent", "code-review", "planning", "human-in-the-loop"]
+}
