@@ -227,6 +227,10 @@ qrspi-orchestrator/
 └── README.md
 ```
 
+## Inspiration
+
+This project was inspired by the work of [Dexter Horthy](https://github.com/dexhorthy) ([@dexhorthy](https://x.com/dexhorthy)), founder of [HumanLayer](https://humanlayer.dev) (YC F24), and his talks on human-in-the-loop agent orchestration and [12 Factor Agents](https://github.com/humanlayer/12-factor-agents).
+
 ## Requirements
 
 - Claude Code v2.1.32+
