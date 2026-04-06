@@ -27,10 +27,106 @@ QRSPI decomposes feature development into 6 phases, each handled by specialized 
 | reviewer | Opus | Implement | Fresh-context code review per task |
 | pr-creator | Sonnet | PR | PR assembly with audit trail |
 
+## How the Orchestration Works
+
+```
+ YOU (human)
+  │
+  │  /qrspi "add rate limiting to the payment endpoint"
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 1: QUESTIONS                                         │
+│  ┌────────────┐                                             │
+│  │ Clarifier  │──▶ reports/01-requirements.md               │
+│  │  (Sonnet)  │                                             │
+│  └────────────┘                                             │
+│  "Requirements ready. Approve, request changes, or reject?" │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ ✅ Human approves
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 2: RESEARCH (parallel agent team)                    │
+│  ┌────────────┐ ┌────────────┐ ┌────────────┐              │
+│  │ Explorer 1 │ │ Explorer 2 │ │ Explorer 3 │  (all Haiku) │
+│  │  core code │ │   APIs &   │ │  tests &   │              │
+│  │            │ │   deps     │ │   infra    │              │
+│  └─────┬──────┘ └─────┬──────┘ └─────┬──────┘              │
+│        └──────────┬───┘──────────────┘                      │
+│                   ▼                                         │
+│        Orchestrator synthesizes all 3 findings              │
+│        ──▶ reports/02-exploration.md                        │
+│  "Exploration complete. Approve to proceed to Design?"      │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ ✅ Human approves
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 3: DESIGN (parallel debate team)                     │
+│  ┌────────────┐    messages    ┌────────────┐               │
+│  │ Architect  │◄──────────────▶│   Critic   │               │
+│  │   (Opus)   │    challenges  │  (Sonnet)  │               │
+│  │            │◄──────────────▶│            │               │
+│  │            │    security    ┌────────────┐               │
+│  │            │◄──────────────▶│  Security  │               │
+│  └────────────┘                │  Reviewer  │               │
+│        │                       │  (Sonnet)  │               │
+│        ▼                       └────────────┘               │
+│  Architect revises until team converges                     │
+│  ──▶ reports/03-design.md                                   │
+│  "Design finalized. Approve to proceed to Plan?"            │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ ✅ Human approves
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 4: PLAN                                              │
+│  ┌────────────┐                                             │
+│  │  Planner   │──▶ tasks.json + reports/04-plan.md          │
+│  │  (Sonnet)  │   (2-5 min tasks, ordered by dependency)   │
+│  └────────────┘                                             │
+│  "12 tasks planned. Approve, reorder, split, or remove?"    │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ ✅ Human approves
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 5: IMPLEMENT (pipelined team, per task)              │
+│                                                             │
+│  For each task:                                             │
+│  ┌────────────┐                                             │
+│  │  Builder   │──▶ implements task N                        │
+│  │  (Sonnet)  │──▶ runs tests                              │
+│  └─────┬──────┘                                             │
+│        │ "Here's what changed (diff). Approve commit?"      │
+│        │  ✅ Human approves commit                          │
+│        ▼                                                    │
+│  ┌────────────┐                                             │
+│  │  Reviewer  │──▶ reviews in fresh context                 │
+│  │   (Opus)   │──▶ reports/review-task-N.md                 │
+│  └─────┬──────┘                                             │
+│        │ PASS ──▶ "Task N approved. Proceed to N+1?"        │
+│        │ FAIL ──▶ Builder fixes, re-submits                 │
+│        │  ✅ Human approves next task                       │
+│        ▼                                                    │
+│  (repeat for all tasks)                                     │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ All tasks approved
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 6: PULL REQUEST                                      │
+│  ┌────────────┐                                             │
+│  │ PR Creator │──▶ assembles PR with full audit trail       │
+│  │  (Sonnet)  │   (links to all reports/)                   │
+│  └────────────┘                                             │
+│  "PR ready. Review and merge?"                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+Every arrow marked ✅ is a **human gate** — the pipeline stops and waits for your explicit approval. You are always in control.
+
 ## Key Features
 
 - **Human gates everywhere** — every phase transition and every commit requires explicit human approval
 - **Pre-commit review** — builder presents all changes with git diff before committing, waits for approval
+- **Explicit next-action statements** — every agent declares what happens next before stopping (e.g., "When Explorer 3 completes, I will synthesize findings and wait for approval before Phase 3")
 - **Session continuity** — `progress.md`, `tasks.json`, and `reports/` enable resume across sessions
 - **Anti-loop guard** — agents stop reading after 10 files and produce output with what they have
 - **Portable** — works as a Claude Code plugin (multi-agent) or as a standalone CLAUDE.md (single-agent, works in Augment/Cursor/Copilot too)
