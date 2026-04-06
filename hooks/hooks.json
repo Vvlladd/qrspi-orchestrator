@@ -5,8 +5,13 @@
         "matcher": "",
         "hooks": [
           {
+            "type": "command",
+            "command": "test -f progress.md && echo 'QRSPI_ACTIVE' || echo 'NO_PIPELINE'",
+            "timeout": 5
+          },
+          {
             "type": "prompt",
-            "prompt": "Before stopping, check: Are you in the middle of a QRSPI pipeline? If so, ensure you have (1) updated progress.md with the latest activity, (2) reported the current status to the human, and (3) clearly stated what needs to happen next and who needs to act (human approval or next agent). If any of these are missing, do them now before stopping.",
+            "prompt": "The previous hook checked if progress.md exists. If the result was 'NO_PIPELINE', ignore this hook entirely — no QRSPI pipeline is active. If the result was 'QRSPI_ACTIVE', then before stopping ensure: (1) progress.md is updated with the latest activity, (2) the current status has been reported to the human, (3) the next action and who needs to act is clearly stated. If any are missing, do them now.",
             "timeout": 30
           }
         ]
@@ -17,8 +22,13 @@
         "matcher": "",
         "hooks": [
           {
+            "type": "command",
+            "command": "test -f progress.md && echo 'QRSPI_ACTIVE' || echo 'NO_PIPELINE'",
+            "timeout": 5
+          },
+          {
             "type": "prompt",
-            "prompt": "A subagent just finished. Check if this was a QRSPI pipeline agent (clarifier, explorer, architect, critic, security-reviewer, planner, builder, reviewer, pr-creator). If it was, verify that: (1) the agent produced its expected output file in reports/ or tasks.json, (2) progress.md was updated, (3) the human has been notified of the result. If any output is missing, flag it before proceeding.",
+            "prompt": "The previous hook checked if progress.md exists. If the result was 'NO_PIPELINE', ignore this hook entirely — no QRSPI pipeline is active. If the result was 'QRSPI_ACTIVE', check if this was a QRSPI pipeline agent (clarifier, explorer, architect, critic, security-reviewer, planner, builder, reviewer, pr-creator). If it was, verify: (1) the agent produced its expected output file in reports/ or tasks.json, (2) progress.md was updated, (3) the human has been notified of the result. If any output is missing, flag it.",
             "timeout": 30
           }
         ]
