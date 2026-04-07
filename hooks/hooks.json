@@ -6,13 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "test -f progress.md && echo 'QRSPI_ACTIVE' || echo 'NO_PIPELINE'",
+            "command": "test -f progress.md && echo 'QRSPI pipeline is active. Before stopping, ensure: (1) progress.md is updated with latest activity, (2) current status reported to human, (3) next action and who needs to act is clearly stated.' || true",
             "timeout": 5
-          },
-          {
-            "type": "prompt",
-            "prompt": "The previous hook checked if progress.md exists. If the result was 'NO_PIPELINE', ignore this hook entirely — no QRSPI pipeline is active. If the result was 'QRSPI_ACTIVE', then before stopping ensure: (1) progress.md is updated with the latest activity, (2) the current status has been reported to the human, (3) the next action and who needs to act is clearly stated. If any are missing, do them now.",
-            "timeout": 30
           }
         ]
       }
@@ -23,13 +18,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "test -f progress.md && echo 'QRSPI_ACTIVE' || echo 'NO_PIPELINE'",
+            "command": "test -f progress.md && echo 'QRSPI subagent finished. Verify: (1) agent produced expected output in reports/ or tasks.json, (2) progress.md updated, (3) human notified of result.' || true",
             "timeout": 5
-          },
-          {
-            "type": "prompt",
-            "prompt": "The previous hook checked if progress.md exists. If the result was 'NO_PIPELINE', ignore this hook entirely — no QRSPI pipeline is active. If the result was 'QRSPI_ACTIVE', check if this was a QRSPI pipeline agent (clarifier, explorer, architect, critic, security-reviewer, planner, builder, reviewer, pr-creator). If it was, verify: (1) the agent produced its expected output file in reports/ or tasks.json, (2) progress.md was updated, (3) the human has been notified of the result. If any output is missing, flag it.",
-            "timeout": 30
           }
         ]
       }

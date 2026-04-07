@@ -8,7 +8,7 @@
       "name": "qrspi-orchestrator",
       "source": "./",
       "description": "Multi-agent QRSPI pipeline plugin",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "author": {
         "name": "Vlad"
       }
